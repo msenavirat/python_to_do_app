@@ -29,11 +29,10 @@ def load_tasks_from_db(task_manager):
                 cursor.execute("SELECT description, is_completed FROM app.task")
                 rows = cursor.fetchall()
 
-                for row in rows:
-                    task = Task(row[0])  # row[0] contains the description
-                    if row[1]:  # row[1] contains is_completed
-                        task.mark_done()
-                    task_manager.add_task(task) #uneccesry to check again?
+                
+                tasks = [Task(description=row[0], completed=row[1]) for row in rows]
+
+                task_manager.tasks.extend(tasks)  # Add all tasks at once
             print("Tasks loaded from PostgreSQL.")
         except Exception as e:
             print(f"Error loading tasks from database: {e}")
